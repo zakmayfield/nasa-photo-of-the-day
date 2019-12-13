@@ -11,7 +11,7 @@ import "./App.css";
 function App() {
   const [photoData, setPhotoData] = useState([]);
 
-  const [whichDate, setWhichDate] = useState("2018-02-13");
+  const [whichDate, setWhichDate] = useState(getTodaysDate());
 
   useEffect(() => {
     axios.get(`https://api.nasa.gov/planetary/apod?api_key=hJK5m8gB7G78sk77SdkOLysES6qGL2PL7smjjfLy&date=${whichDate}`)
@@ -24,7 +24,7 @@ function App() {
   }, [whichDate]);
 
   function getTodaysDate(){
-    let newDate = new Date();
+    let newDate = new window.Date();
     let year = newDate.getFullYear();
     let month = newDate.getMonth() + 1;
     let day = newDate.getDate();
@@ -35,7 +35,7 @@ function App() {
   };
 
   function lastYearsDate(){
-    let newDate = new Date();
+    let newDate = new window.Date();
     let year = newDate.getFullYear();
     let month = newDate.getMonth() + 1;
     let day = newDate.getDate();
@@ -46,7 +46,7 @@ function App() {
   };
   
   function twoYearsAgoDate(){
-    let newDate = new Date();
+    let newDate = new window.Date();
     let year = newDate.getFullYear();
     let month = newDate.getMonth() + 1;
     let day = newDate.getDate();
@@ -55,6 +55,14 @@ function App() {
     
     return twoYearsAgoToday;
   };
+
+  function getDateXYearsAgo(yearsAgo = 0){
+    let [thisYear, thisMonth, thisDay] = getTodaysDate().split('-');
+    let xYearsAgo = (parseInt(thisYear) - yearsAgo)
+
+    return `${xYearsAgo}-${thisMonth}-${thisDay}`;
+  }
+  
 
   return (
     <div className="container">
@@ -67,13 +75,21 @@ function App() {
 
         <div className="title-container">
           {photoData.map((item, index) => {
-            return <Title key={index} title={item.title}/>
+            return <Title 
+                      key={index} 
+                      title={item.title}
+                    />
           })}
         </div>
 
         <div className="date-container">
           {photoData.map((item, index) => {
-            return <Date key={index} date={item.date} getTodaysDate={ getTodaysDate } lastYearsDate={ lastYearsDate } twoYearsAgoDate={ twoYearsAgoDate }/>
+            return <Date 
+                      key={index} 
+                      date={item.date} 
+                      getDateXYearsAgo={ getDateXYearsAgo }
+                      setWhichDate={ setWhichDate }
+                    />
           })}
         </div>
       </StyledComps.Header>
@@ -83,7 +99,10 @@ function App() {
     {/* IMAGE CONTAINER */}
       <div className="image-container">
         {photoData.map((item, index) => {
-          return <ImageDisplay key={index} hdurl={item.hdurl} />
+          return <ImageDisplay 
+                    key={index} 
+                    hdurl={item.hdurl} 
+                  />
         })}
       </div>
     {/* IMAGE CONTAINER ENDS */}
@@ -92,7 +111,10 @@ function App() {
     {/* DESCRIPTION CONTAINER */}
       <StyledComps.DescriptionContainer>
         {photoData.map((item, index) => {
-          return <Explain key={index} explanation={item.explanation} />
+          return <Explain 
+                    key={index} 
+                    explanation={item.explanation} 
+                  />
         })}
       </StyledComps.DescriptionContainer>
     {/* DESCRIPTION CONTAINER ENDS */}

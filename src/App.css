@@ -32,6 +32,10 @@ p{
   align-items: center;
 }
 
+img{
+  border-radius: 5px;
+}
+
 /*
 .container{
   background: rgb(255, 255, 255);

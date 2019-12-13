@@ -15,8 +15,15 @@ const Date = (props) => {
         Select A Year
         </DropdownToggle>
         <DropdownMenu>
-          <DropdownItem>1 Year Ago</DropdownItem>
-          <DropdownItem>2 Years Ago</DropdownItem>
+          <div onClick={ props.setWhichDate.bind(null, props.getDateXYearsAgo()) }>
+            <DropdownItem>Today</DropdownItem>
+          </div>
+          <div onClick={ props.setWhichDate.bind(null, props.getDateXYearsAgo(1)) }>
+            <DropdownItem>1 Year Ago</DropdownItem>
+          </div>
+          <div onClick={ props.setWhichDate.bind(null, props.getDateXYearsAgo(2))}>
+            <DropdownItem>2 Years Ago</DropdownItem>
+          </div>
         </DropdownMenu>
       </ButtonDropdown>
     </div>
