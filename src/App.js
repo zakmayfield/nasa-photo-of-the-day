@@ -4,68 +4,125 @@ import Date from './components/Date';
 import ImageDisplay from './components/ImageDisplay';
 import Explain from './components/Explain';
 import axios from 'axios';
+import { Button } from 'reactstrap';
+import * as StyledComps from './style';
 import "./App.css";
 
 function App() {
   const [photoData, setPhotoData] = useState([]);
-  // cosnt [specificDate, setSpecificDate] = useState('')
+
+  const [whichDate, setWhichDate] = useState(getTodaysDate());
 
   useEffect(() => {
-    axios.get(`https://api.nasa.gov/planetary/apod?api_key=hJK5m8gB7G78sk77SdkOLysES6qGL2PL7smjjfLy`)
+    axios.get(`https://api.nasa.gov/planetary/apod?api_key=hJK5m8gB7G78sk77SdkOLysES6qGL2PL7smjjfLy&date=${whichDate}`)
       .then(res => {
         setPhotoData([res.data]);
       })
       .catch(err => {
         console.log('Could not get data', err);
       })
-  }, []);
+  }, [whichDate]);
+
+  function getTodaysDate(){
+    let newDate = new window.Date();
+    let year = newDate.getFullYear();
+    let month = newDate.getMonth() + 1;
+    let day = newDate.getDate();
+    
+    let todaysDate = `${year}-${month}-${day}`;
+    
+    return todaysDate;
+  };
+
+  function lastYearsDate(){
+    let newDate = new window.Date();
+    let year = newDate.getFullYear();
+    let month = newDate.getMonth() + 1;
+    let day = newDate.getDate();
+    
+    let lastYearToday = `${year - 1}-${month}-${day}`;
+    
+    return lastYearToday;
+  };
+  
+  function twoYearsAgoDate(){
+    let newDate = new window.Date();
+    let year = newDate.getFullYear();
+    let month = newDate.getMonth() + 1;
+    let day = newDate.getDate();
+    
+    let twoYearsAgoToday = `${year - 2}-${month}-${day}`;
+    
+    return twoYearsAgoToday;
+  };
+
+  function getDateXYearsAgo(yearsAgo = 0){
+    let [thisYear, thisMonth, thisDay] = getTodaysDate().split('-');
+    let xYearsAgo = (parseInt(thisYear) - yearsAgo)
+
+    return `${xYearsAgo}-${thisMonth}-${thisDay}`;
+  }
+  
 
   return (
     <div className="container">
 
-
     {/* HEADER CONTAINER THE LOGO / TITLE OF PHOTO / AND DATE  */}
-      <div className="header">
+      <StyledComps.Header>
         <div className="logo-container">
           <h1>NASA</h1>
         </div>
 
         <div className="title-container">
           {photoData.map((item, index) => {
-            return <Title key={index} title={item.title} />
+            return <Title 
+                      key={index} 
+                      title={item.title}
+                    />
           })}
         </div>
 
         <div className="date-container">
           {photoData.map((item, index) => {
-            return <Date key={index} date={item.date} />
+            return <Date 
+                      key={index} 
+                      date={item.date} 
+                      getDateXYearsAgo={ getDateXYearsAgo }
+                      setWhichDate={ setWhichDate }
+                    />
           })}
         </div>
-      </div>
+      </StyledComps.Header>
     {/* END OF HEADER */}
 
 
     {/* IMAGE CONTAINER */}
       <div className="image-container">
         {photoData.map((item, index) => {
-          return <ImageDisplay key={index} hdurl={item.hdurl} />
+          return <ImageDisplay 
+                    key={index} 
+                    hdurl={item.hdurl} 
+                  />
         })}
       </div>
     {/* IMAGE CONTAINER ENDS */}
 
     
     {/* DESCRIPTION CONTAINER */}
-      <div className="description-container">
+      <StyledComps.DescriptionContainer>
         {photoData.map((item, index) => {
-          return <Explain key={index} explanation={item.explanation} />
+          return <Explain 
+                    key={index} 
+                    explanation={item.explanation} 
+                  />
         })}
-      </div>
+      </StyledComps.DescriptionContainer>
     {/* DESCRIPTION CONTAINER ENDS */}
 
     {/* FOOTER CONTAINER */}
-      <div className="footer-container">
+      <StyledComps.Footer>
         <p>All rights reserved by NASA</p>
-      </div>
+      </StyledComps.Footer>
 
     </div>
   );
